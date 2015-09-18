@@ -1,12 +1,12 @@
 #include "EncoderOSCMonitor.h"
 
-#define RECEIVER_IP "192.168.1.4"
-#define RECEIVER_PORT 5678
 #define STEPS_PER_REVOLUTION 2500
 
-EncoderOSCMonitor::EncoderOSCMonitor(EthernetUDP &u, uint8_t pin1, uint8_t pin2)
+EncoderOSCMonitor::EncoderOSCMonitor(EthernetUDP &u, uint8_t pin1, uint8_t pin2, char* rip, int rport)
   : udpConnection(u),
     encoder(Encoder(pin1, pin2)),
+    remote_ip(rip),
+    remote_port(rport),
     last_position(0),
     last_speed(0.0),
     last_time(millis()) {}
@@ -47,7 +47,7 @@ void EncoderOSCMonitor::sendMessage(char *address, float value) {
   OSCMessage Msg(address);
   Msg.add(value);
 
-  udpConnection.beginPacket(RECEIVER_IP, RECEIVER_PORT);
+  udpConnection.beginPacket(remote_ip, remote_port);
   Msg.send(udpConnection);
   udpConnection.endPacket();
   Msg.empty(); // free space occupied by message
