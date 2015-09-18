@@ -3,13 +3,21 @@
 #define RECEIVER_IP "192.168.1.4"
 #define RECEIVER_PORT 5678
 
-EncoderOSCMonitor::EncoderOSCMonitor(EthernetUDP &u, uint8_t pin1, uint8_t pin2): udpConnection(u), encoder(Encoder(pin1, pin2)) {}
+EncoderOSCMonitor::EncoderOSCMonitor(EthernetUDP &u, uint8_t pin1, uint8_t pin2)
+  : udpConnection(u),
+    encoder(Encoder(pin1, pin2)),
+    current_position(0) {}
 
-void EncoderOSCMonitor::reportPosition(char* address) {
-  sendMessage(address, encoder.read());
+int32_t EncoderOSCMonitor::readPosition() {
+  current_position = encoder.read();
+  return(current_position);
 }
 
-void EncoderOSCMonitor::sendMessage(char *address, int value) {
+void EncoderOSCMonitor::reportPosition(char* address) {
+  sendMessage(address, readPosition());
+}
+
+void EncoderOSCMonitor::sendMessage(char *address, float value) {
   OSCMessage Msg(address);
   Msg.add(value);
 
