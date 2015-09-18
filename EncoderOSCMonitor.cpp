@@ -17,6 +17,11 @@ void EncoderOSCMonitor::update() {
   last_time     = millis();
 }
 
+void EncoderOSCMonitor::reset() {
+  encoder.write(0);
+  last_position = 0;
+}
+
 float EncoderOSCMonitor::calculateSpeed(){
   int32_t position_difference = encoder.read() - last_position;
   int32_t time_difference     = millis() - last_time;

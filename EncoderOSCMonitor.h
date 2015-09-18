@@ -14,6 +14,7 @@
     float calculateSpeed();
     void reportPosition(char *address); // report the last recorded position via UDP
     void reportSpeed(char *address);    // report the last calculated speed via UDP
+    void reset();                       // resets the position of the encoder to zero
   private:
     int32_t last_position;
     long last_time;
