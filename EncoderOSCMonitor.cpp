@@ -7,23 +7,32 @@
 EncoderOSCMonitor::EncoderOSCMonitor(EthernetUDP &u, uint8_t pin1, uint8_t pin2)
   : udpConnection(u),
     encoder(Encoder(pin1, pin2)),
-    current_position(0),
-    update_time(millis()) {}
+    last_position(0),
+    last_speed(0.0),
+    last_time(millis()) {}
 
-int32_t EncoderOSCMonitor::readPosition() {
-  current_position = encoder.read();
-  return(current_position);
+void EncoderOSCMonitor::update() {
+  last_speed    = calculateSpeed();
+  last_position = encoder.read();
+  last_time     = millis();
 }
 
-float EncoderOSCMonitor::readSpeed() {
-  int32_t old_position        = current_position;
-  int32_t position_difference = readPosition() - old_position;
-  int32_t time_difference     = millis() - update_time;
+float EncoderOSCMonitor::calculateSpeed(){
+  int32_t position_difference = encoder.read() - last_position;
+  int32_t time_difference     = millis() - last_time;
   float   revolutions         = (float) position_difference / STEPS_PER_REVOLUTION;
   float speed = (float) revolutions/time_difference * 1000;
 
-  update_time = millis();
   return(speed);
+}
+
+int32_t EncoderOSCMonitor::readPosition() {
+  return(last_position);
+}
+
+float EncoderOSCMonitor::readSpeed() {
+
+  return(last_speed);
 }
 
 void EncoderOSCMonitor::reportSpeed(char* address) {
