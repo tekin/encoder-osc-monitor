@@ -12,8 +12,8 @@
     float readSpeed();                  // returns the current rotations per second of the encoder
     void update();                      // call this to recalclulate the position and speed values
     float calculateSpeed();
-    void reportPosition(char *address); // sends the last recorded position via UDP
-    void reportSpeed(char *address);    // sends the last calculated speed via UDP
+    void reportPosition(char *address); // report the last recorded position via UDP
+    void reportSpeed(char *address);    // report the last calculated speed via UDP
   private:
     int32_t last_position;
     long last_time;
