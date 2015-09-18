@@ -7,9 +7,12 @@
 
   class EncoderOSCMonitor {
   public:
-    EncoderOSCMonitor(EthernetUDP &);
+    EncoderOSCMonitor(EthernetUDP &u, uint8_t pin1, uint8_t pin2);
+    void reportPosition(char *address);
   private:
     EthernetUDP &udpConnection;
+    Encoder encoder;
+    void sendMessage(char *address, int value);
   };
 
 #endif
